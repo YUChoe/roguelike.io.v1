@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://c2deoy66r8obd"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_r2omt"]
+[ext_resource type="Script" path="res://Camera.gd" id="2_dlfwn"]
+[ext_resource type="Script" path="res://GroundTile.gd" id="2_igfhm"]
+[ext_resource type="PackedScene" uid="uid://b2e6crstsb1fh" path="res://Enemy.tscn" id="3_esn45"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m8chr"]
+albedo_color = Color(0.12549, 0.360784, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t144i"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_45dxf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_58m51"]
+albedo_color = Color(0, 0, 0, 0.87451)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vvcux"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y8va8"]
+albedo_color = Color(0.639216, 0.380392, 0.12549, 1)
+
+[node name="GameLevel" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_r2omt")
+metadata/_edit_group_ = true
+
+[node name="BodyMesh" type="MeshInstance3D" parent="Player"]
+material_override = SubResource("StandardMaterial3D_m8chr")
+mesh = SubResource("CapsuleMesh_t144i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_45dxf")
+
+[node name="EyesMesh" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(-2.18557e-08, 0, 0.8, 0, 0.3, 0, -0.5, 0, -3.49691e-08, 0, 0.5, 0.4)
+material_override = SubResource("StandardMaterial3D_58m51")
+mesh = SubResource("BoxMesh_vvcux")
+
+[node name="RayCast3D" type="RayCast3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)
+debug_shape_thickness = 5
+
+[node name="MeleeAttackTimer" type="Timer" parent="Player"]
+autostart = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.808424, -0.439534, 0.391484, 0.00204723, 0.667207, 0.74487, -0.588597, -0.601369, 0.540286, 14.7904, 10.5386, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.762973, 0.64643, 0, -0.64643, 0.762973, 0, 14.9055, 10.9044)
+script = ExtResource("2_dlfwn")
+
+[node name="GroundTile" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_y8va8")
+script = ExtResource("2_igfhm")
+enemy_scene = ExtResource("3_esn45")
+
+[node name="SpawnTimer" type="Timer" parent="GroundTile"]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="Player/MeleeAttackTimer" to="GroundTile" method="_on_melee_attack_timer_timeout"]
+[connection signal="timeout" from="GroundTile/SpawnTimer" to="GroundTile" method="_on_timer_timeout"]
