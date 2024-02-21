@@ -30,6 +30,7 @@ func initialize(start_position, player):
 	PL = player
 	look_at_from_position(start_position, PL.position, Vector3.UP)
 	rotate_y(randf_range(-PI / 4, PI / 4))
+	scale = Vector3(0.5, 0.5, 0.5)
 
 func hit():
 	# TODO: by who, damage etc
