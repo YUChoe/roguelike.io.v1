@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=3 uid="uid://c2deoy66r8obd"]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_r2omt"]
+[ext_resource type="Script" path="res://GameObjects/Player_Heroine/Player.gd" id="1_r2omt"]
 [ext_resource type="Script" path="res://Camera.gd" id="2_dlfwn"]
 [ext_resource type="Script" path="res://GroundTile.gd" id="2_igfhm"]
-[ext_resource type="PackedScene" uid="uid://b2e6crstsb1fh" path="res://Enemy.tscn" id="3_esn45"]
+[ext_resource type="PackedScene" uid="uid://b2e6crstsb1fh" path="res://GameObjects/Enemy_noname/Enemy.tscn" id="3_esn45"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m8chr"]
 albedo_color = Color(0.12549, 0.360784, 1, 1)
@@ -66,6 +66,14 @@ enemy_scene = ExtResource("3_esn45")
 [node name="SpawnTimer" type="Timer" parent="GroundTile"]
 wait_time = 2.0
 autostart = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="GroundTile"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.11396, 11.4392)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="GroundTile/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0978465, 0)
+use_collision = true
+size = Vector3(5, 10, 5)
 
 [connection signal="timeout" from="Player/MeleeAttackTimer" to="GroundTile" method="_on_melee_attack_timer_timeout"]
 [connection signal="timeout" from="GroundTile/SpawnTimer" to="GroundTile" method="_on_timer_timeout"]
